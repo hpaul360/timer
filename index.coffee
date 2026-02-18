@@ -20,7 +20,7 @@ ringBells = (count) ->
 
 class Timer
   constructor: (@dom, @callback) ->
-    @duration = 5 * minute
+    @duration = 10 * minute
     @started = null
     @elapsed = @bells = 0
   addDuration: (delta) ->
@@ -40,13 +40,29 @@ class Timer
     left = @remaining()
     left /= 1000
 
+    # elapsed seconds
+   elapsed = (@duration / 1000) - left
+
+   if @started
+     if elapsed >= 360 and @bells < 1
+       @bells = 1
+       ringBells 1
+
+     if elapsed >= 420 and @bells < 2
+       @bells = 2
+       ringBells 2
+
+     if elapsed >= 600 and @bells < 3
+       @bells = 3
+       ringBells 3
+
     ## Bell ringing
-    mins = Math.ceil left / 60
-    if @started and mins < bellCount
-      bells = bellCount - mins
-      if @bells < bells <= bellCount
-        @bells = bells
-        ringBells @bells
+    #mins = Math.ceil left / 60
+    #if @started and mins < bellCount
+    #  bells = bellCount - mins
+    #  if @bells < bells <= bellCount
+    #    @bells = bells
+    #    ringBells @bells
 
     ## Update display
     @dom.classList.toggle 'started', @started?
